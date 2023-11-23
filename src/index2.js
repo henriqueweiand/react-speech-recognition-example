@@ -58,7 +58,7 @@ const App = () => {
     SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
   const { transcript } = useSpeechRecognition();
 
-  const text = "i want to check, if there's any problem, what do you think?";
+  const text = "i want to check if there's any problem, what do you think?";
 
   return (
     <div className="container">

@@ -4,44 +4,34 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 
 function removeSpecialCharacters(str) {
-  return str.replace(/[^\w\s]/g, "");
+  return str.replace(/[^\w\s]/g, " ");
 }
 
 const Highlighted = ({ text = "", input = "" }) => {
   const [textProgress, setTextProgress] = useState("");
-  const [difference, setDifference] = useState(text);
+  // const [difference, setDifference] = useState(text);
 
   useEffect(() => {
     if (!input) return;
 
-    const inputWords = input.split(" ");
-    const lastWordSpoken = inputWords[inputWords.length - 1];
-
-    let newPartOfThePhrase = "";
-
-    if (!!textProgress) {
-      newPartOfThePhrase = [textProgress, lastWordSpoken].join(" ");
-    } else {
-      newPartOfThePhrase = lastWordSpoken;
-    }
-
+    const cleanedInput = removeSpecialCharacters(input);
     const cleanedText = removeSpecialCharacters(text);
-    const cleanedInput = removeSpecialCharacters(newPartOfThePhrase);
 
     const regex = new RegExp("^" + cleanedInput, "i");
 
-    if (regex.test(cleanedText)) {
-      setTextProgress(newPartOfThePhrase);
+    console.log("cleanedText ", cleanedText);
+    console.log("cleanedInput ", cleanedInput);
 
-      const regex2 = new RegExp("^" + newPartOfThePhrase, "i");
-      setDifference(text.replace(regex2, ""));
+    if (regex.test(cleanedText)) {
+      setTextProgress(input);
+      // setDifference(text.replace(regex, ""));
     }
-  }, [input, text, textProgress, difference]);
+  }, [input, text]);
 
   return (
     <div>
       <span style={{ backgroundColor: "yellow" }}>{textProgress}</span>
-      <span>{difference}</span>
+      {/* <span> {difference}</span> */}
     </div>
   );
 };
@@ -62,8 +52,11 @@ const App = () => {
 
   return (
     <div className="container">
-      <div>{transcript}</div>
+      <div>What you said: {transcript}</div>
       <hr />
+
+      <div>{text}</div>
+
       <MemoizedHighlighted text={text} input={transcript} />
 
       <div className="btn-style">
